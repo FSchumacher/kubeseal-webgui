@@ -13,7 +13,7 @@ class KubesealEndpoint(Resource):
     """Provides REST-API for sealing sensitive data."""
 
     @classmethod
-    def get(cls):
+    def get(cls) -> str:
         """
         Return info message. Used for health checks.
 
@@ -22,7 +22,7 @@ class KubesealEndpoint(Resource):
         return "Use POST HTTP request to seal secret."
 
     @classmethod
-    def post(cls):
+    def post(cls) -> list:
         """
         Provide sealing functionality via kubseal-cli.
 
@@ -48,7 +48,7 @@ class KubesealEndpoint(Resource):
         return response
 
 
-def run_kubeseal(cleartext_secrets, secret_namespace, secret_name):
+def run_kubeseal(cleartext_secrets, secret_namespace, secret_name) -> list:
     """Check input and initiate kubeseal-cli call."""
     if secret_namespace is None or secret_namespace == "":
         error_message = "secret_namespace was not given"
@@ -77,7 +77,7 @@ def run_kubeseal(cleartext_secrets, secret_namespace, secret_name):
     return sealed_secrets
 
 
-def run_kubeseal_command(cleartext_secret_tuple, secret_namespace, secret_name):
+def run_kubeseal_command(cleartext_secret_tuple, secret_namespace, secret_name) -> dict:
     """Call kubeseal-cli in subprocess."""
     LOGGER.info(
         f"Sealing secret '{secret_name}.{cleartext_secret_tuple['key']}' \
@@ -105,7 +105,7 @@ def run_kubeseal_command(cleartext_secret_tuple, secret_namespace, secret_name):
     return {"key": cleartext_secret_tuple["key"], "value": sealed_secret}
 
 
-def decode_base64_string(base64_string_message: str):
+def decode_base64_string(base64_string_message: str) -> str:
     """Decode base64 ascii-encoded input."""
     base64_bytes = base64_string_message.encode("ascii")
     message_bytes = base64.b64decode(base64_bytes)
